@@ -68,23 +68,32 @@ def userReport():
     cursor.execute("INSERT INTO statusUpdate (reportID, title, status) VALUES (?, ?, ?)",
                (reportID, title, status))
 
+    conn.commit()
     
-    def printReport():
-        cursor.execute("SELECT * FROM report")
-        rows = cursor.fetchall()
-        
-        for row in rows:
-            print(row)
+    
+def printReport():
+    # Define the reportId you want to retrieve
+        inquireReportID = input("Insert The ReportId that you want to see: ")
+
+        # Fetch the row with reportId equal to user input using a WHERE clause
+        cursor.execute("SELECT * FROM report WHERE reportId=?", (inquireReportID,))
+        row = cursor.fetchone()
+
+        # Check if a row was found
+        if row:
+            print("ReportId:", row[0])  
+            print("Title:", row[1])  
+            print("Checklist:", row[2])
+            print("image_path:", row[3])
+            print("details:", row[4])
+            print("urgency:", row[5])
+            print("status:", row[6])
             
-    def printStatusUpdate():
-        cursor.execute("SELECT * FROM statusUpdate")
-        rows = cursor.fetchall()
-        
-        for row in rows:
-            print(row)
+        else:
+            print("No row found with ReportId =", inquireReportID)
+
     
-    printReport()
-    printStatusUpdate()
+    
 
 
 
