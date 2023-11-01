@@ -40,3 +40,28 @@ def main():
 
 # Call the main function to execute your code
 main()
+
+import sqlite3
+
+# Connect to the database
+conn = sqlite3.connect('database_name.db')
+cursor = conn.cursor()
+
+# Get user input
+title = input("Enter report title: ")
+checklist = input("Enter checklist item: ")
+image_path = input("Enter image path: ")
+details = input("Enter details: ")
+urgency = input("Enter urgency level (Low, Medium, High): ")
+
+# Insert user input into the database
+cursor.execute("INSERT INTO reports (title, checklist, image_path, details, urgency) VALUES (?, ?, ?, ?, ?, ?)",
+               (title, checklist, image_path, details, urgency, status))
+
+# Commit the changes
+conn.commit()
+
+# Close the connection
+conn.close()
+
+print("Data inserted successfully.")
