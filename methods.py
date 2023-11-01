@@ -91,6 +91,33 @@ def printReport():
             
         else:
             print("No row found with ReportId =", inquireReportID)
+            
+def statusUpdate():
+    def status1():
+        return "Preparing to deploy"
+    
+    def status2():
+        return "On the Process"
+    
+    def status3():
+        return "Resolved"
+    
+    
+    pre_defined_status ={
+        1: status1,
+        2: status2,
+        3: status3,
+    }
+    
+    choice = input("Enter the new status: [1]Preparing to deploy [2]On the Process [3]Resolved: ")
+    newStatus = pre_defined_status[int(choice)]()
+    whereReportID = input("Enter the reportID of the incident:")
+
+    # Update the status for the specific reportId using a WHERE clause
+    cursor.execute("UPDATE report SET status=? WHERE reportId=?", (newStatus, whereReportID))
+
+    # Commit the changes to the database
+    conn.commit()
 
     
     
