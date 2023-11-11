@@ -1,8 +1,14 @@
-import sqlite3
+import mysql.connector
 import random
 
-conn = sqlite3.connect('database.db')
-cursor = conn.cursor()
+db = mysql.connector.connect(
+    host = "localhost",
+    user = "root",
+    password = "incidentreportingapp",
+    database = "reportingApp"   
+)
+
+cursor = db.cursor()
 
 def initialization():
     def createReportTable():
@@ -62,13 +68,13 @@ def userReport():
     status = "pending"
     
     # Insert user input into the database
-    cursor.execute("INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    cursor.execute("INSERT INTO report (reportID, title, checklist, image_path, details, urgency, status) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                (reportID, title, checklist, image_path, details, urgency, status))
     
-    cursor.execute("INSERT INTO statusUpdate (reportID, title, status) VALUES (?, ?, ?)",
+    cursor.execute("INSERT INTO statusUpdate (reportID, title, status) VALUES (%s, %s, %s)",
                (reportID, title, status))
 
-    conn.commit()
+    db.commit()
     
     
 def printReport():
@@ -76,7 +82,7 @@ def printReport():
         inquireReportID = input("Insert The ReportId that you want to see: ")
 
         # Fetch the row with reportId equal to user input using a WHERE clause
-        cursor.execute("SELECT * FROM report WHERE reportId=?", (inquireReportID,))
+        cursor.execute("SELECT * FROM report WHERE reportId=%s", (inquireReportID,))
         row = cursor.fetchone()
 
         # Check if a row was found
@@ -114,10 +120,11 @@ def statusUpdate():
     whereReportID = input("Enter the reportID of the incident:")
 
     # Update the status for the specific reportId using a WHERE clause
-    cursor.execute("UPDATE report SET status=? WHERE reportId=?", (newStatus, whereReportID))
+    cursor.execute("UPDATE report SET status=%s WHERE reportId=%s", (newStatus, whereReportID))
 
     # Commit the changes to the database
-    conn.commit()
+    db.commit()
+
 
     
     
